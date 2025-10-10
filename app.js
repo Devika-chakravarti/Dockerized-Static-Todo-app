@@ -6,6 +6,10 @@ const progressBar = document.getElementById("progress");
 
 let tasks = [];
 
+if (localStorage.getItem("tasks")) {
+  tasks = JSON.parse(localStorage.getItem("tasks"));
+}
+
 function updateProgress() {
   const total = tasks.length;
   const completed = tasks.filter(task => task.completed).length;
@@ -15,7 +19,10 @@ function updateProgress() {
   progressBar.style.width = `${progressPercent}%`;
 }
 
-// Add Task
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 newTaskButton.addEventListener("click", function (e) {
   e.preventDefault();
   const taskText = taskInput.value.trim();
@@ -31,6 +38,7 @@ newTaskButton.addEventListener("click", function (e) {
   taskInput.value = "";
   renderTasks();
   updateProgress();
+  saveTasks();
 });
 
 function renderTasks() {
@@ -51,6 +59,7 @@ function renderTasks() {
       task.completed = !task.completed;
       renderTasks();
       updateProgress();
+      saveTasks(); 
     });
 
     const taskText = document.createElement("span");
@@ -63,10 +72,8 @@ function renderTasks() {
     editIcon.style.cursor = "pointer";
     editIcon.addEventListener("click", () => {
       taskText.setAttribute("contenteditable", "true");
-      taskText.textContent = ""; // Clear old text
       taskText.focus();
 
-      // Cursor at end
       const range = document.createRange();
       const sel = window.getSelection();
       range.selectNodeContents(taskText);
@@ -81,10 +88,10 @@ function renderTasks() {
         }
         taskText.setAttribute("contenteditable", "false");
         renderTasks();
+        saveTasks();
       };
 
       taskText.addEventListener("blur", save, { once: true });
-
       taskText.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
@@ -100,6 +107,7 @@ function renderTasks() {
       tasks = tasks.filter(t => t.id !== task.id);
       renderTasks();
       updateProgress();
+      saveTasks(); 
     });
 
     const actionsDiv = document.createElement("div");
@@ -116,3 +124,6 @@ function renderTasks() {
 
   updateProgress();
 }
+
+renderTasks();
+updateProgress();
