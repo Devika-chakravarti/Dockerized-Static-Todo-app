@@ -22,12 +22,3 @@ This project has been containerized using **Docker** and served via **Nginx**, m
 - Docker
 - Nginx (for serving static files)
 
----
-
-## 🐳 Run This Project with Docker
-
-### 🔧 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/dockerized-static-todo-app.git
-cd dockerized-static-todo-app
